@@ -1,0 +1,60 @@
+html
+  head
+    link(rel="stylesheet" type="text/css" href="/stylesheets/style.css")
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js")
+    link(rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css")
+    script(src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js")
+    title GitHub Repository Search
+  body
+    div.container
+      h1 GitHub Repository Search
+      .search-form
+        input.search-input(type='text', placeholder='Enter search query')
+        button.search-button(type='submit') Search
+    .tableSection 
+      table#repoResultsTable
+        thead 
+          tr 
+            th SNO
+            th Name 
+            th Repository URL 
+            th Description 
+            th Languages_Used
+        tbody
+  script.
+    $(document).ready(function() {
+      $('#repoResultsTable').hide();
+      $('.search-button').on('click', () => {
+        Swal.fire({
+          title: "Loading",
+          text: "Please wait while we process your request...",
+          showCancelButton: false,
+          showConfirmButton: false,
+        });
+        console.log($('.search-input').val())
+        const searchQuery = $('.search-input').val();
+        $.post('search/repo', {searchQuery}, (result) => {
+          Swal.close();
+          if (result && result.data && result.data.length === 0) {
+            Swal.fire({
+              title: "Error!",
+              text: result.status,
+              icon: "error",
+            });
+            return;
+          }
+          $('#repoResultsTable').show();
+          console.log('result...', result);
+          result = result.data;
+          let str = '';
+          for(let i = 0; i < result.length; i += 1) {
+            console.log('inside.....')
+            str += `<tr><td>${i}</td><td>${result[i].name}</td><td>${result[i].url}</td><td>${result[i].description}</td><td>${result[i].language}</td></tr>`
+          }
+          $('#repoResultsTable tbody').append(str);
+          $('#repoResultsTable').DataTable();
+        });
+      })
+    });
+    
