@@ -1,4 +1,4 @@
-html
+html.dark
   head
     link(rel="stylesheet" type="text/css" href="/stylesheets/style.css")
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js")
@@ -7,36 +7,59 @@ html
     script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js")
     title GitHub Repository Search
   body
-    div.container
-      h1 GitHub Repository Search
-      .search-form
-        input.search-input(type='text', placeholder='Enter search query')
-        button.search-button(type='submit') Search
-    .tableSection 
-      table#repoResultsTable
-        thead 
-          tr 
-            th SNO
-            th Name 
-            th Repository URL 
-            th Description 
-            th Languages_Used
-        tbody
+    .wrapper
+      .container
+        h1 GitHub Repository Search
+        .search-form    
+          img.coding-image(src='/images/unnamed.png')
+          input.search-input(type='text', placeholder='Enter search query')
+          button.search-button(type='submit') Search
+      .tableSection 
+        table#repoResultsTable
+          thead.table-heading
+            tr 
+              th SNO
+              th Name 
+              th Repository URL 
+              th Description 
+              th Languages_Used
+          tbody
   script.
     $(document).ready(function() {
+      // Hide the repoResultsTable initially
       $('#repoResultsTable').hide();
+
+      // Handle search button click event
       $('.search-button').on('click', () => {
+        // Get the search query from the input field
+        const searchQuery = $('.search-input').val();
+        if(!searchQuery) {
+          Swal.fire({
+            title: "Error!",
+            text: "Please enter a search query",
+            icon: "error",
+          });
+          return;
+        }
+
+        // Show loading state with SweetAlert
         Swal.fire({
           title: "Loading",
           text: "Please wait while we process your request...",
           showCancelButton: false,
           showConfirmButton: false,
         });
-        console.log($('.search-input').val())
-        const searchQuery = $('.search-input').val();
+
+
+
+        // Make a POST request to the search/repo endpoint
         $.post('search/repo', {searchQuery}, (result) => {
+          // Close the loading state SweetAlert
           Swal.close();
+
+          // Handle the result
           if (result && result.data && result.data.length === 0) {
+            // Show an error message with SweetAlert if no data is found
             Swal.fire({
               title: "Error!",
               text: result.status,
@@ -44,17 +67,39 @@ html
             });
             return;
           }
+
+          // Show the repoResultsTable
           $('#repoResultsTable').show();
-          console.log('result...', result);
+
+          // Process the result data
           result = result.data;
           let str = '';
           for(let i = 0; i < result.length; i += 1) {
-            console.log('inside.....')
-            str += `<tr><td>${i}</td><td>${result[i].name}</td><td>${result[i].url}</td><td>${result[i].description}</td><td>${result[i].language}</td></tr>`
+            // Build the table rows with result data
+            str += `<tr class='table-row'><td>${i}</td><td>${result[i].name}</td><td><a href=${result[i].url}>${result[i].url}</a></td><td>${result[i].description}</td><td>${result[i].language}</td></tr>`;
           }
+          // Append the built rows to the repoResultsTable tbody
           $('#repoResultsTable tbody').append(str);
+
+          // Initialize DataTable on the repoResultsTable
           $('#repoResultsTable').DataTable();
+        }).fail((jqXHR, textStatus, errorThrown) => {
+          console.log('jqXHR....',jqXHR);
+          console.log('textStatus....',textStatus)
+          console.log('errorThrown....',errorThrown)
+          // Handle error response
+          $('#repoResultsTable').hide();
+
+          // Close the loading state SweetAlert
+          Swal.close();
+
+          // Show an error message with SweetAlert for server error
+          Swal.fire({
+            title: "Error!",
+            text: jqXHR.responseJSON.status,
+            icon: "error",
+          });
         });
-      })
+      });
     });
     
