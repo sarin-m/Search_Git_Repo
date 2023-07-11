@@ -5,11 +5,11 @@ html.dark
     link(rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css")
     script(src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js")
     script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js")
-    title GitHub Repository Search
+    title RepoFinder
   body
     .wrapper
       .container
-        h1 GitHub Repository Search
+        h1 RepoFinder
         .search-form    
           img.coding-image(src='/images/unnamed.png')
           input.search-input(type='text', placeholder='Enter search query')
@@ -27,10 +27,17 @@ html.dark
   script.
     $(document).ready(function() {
       // Hide the repoResultsTable initially
-      $('#repoResultsTable').hide();
+      $('.tableSection').hide();
+      $('.search-input').keypress( (event) => {
+        // Check if the Enter key is pressed (key code 13)
+        if (event.which === 13) {
+          $('.search-button').click(); // Simulate button click event
+        }
+      });
 
       // Handle search button click event
       $('.search-button').on('click', () => {
+        $('.tableSection').hide();
         // Get the search query from the input field
         const searchQuery = $('.search-input').val();
         if(!searchQuery) {
@@ -69,7 +76,7 @@ html.dark
           }
 
           // Show the repoResultsTable
-          $('#repoResultsTable').show();
+          $('.tableSection').show();
 
           // Process the result data
           result = result.data;
@@ -88,7 +95,7 @@ html.dark
           console.log('textStatus....',textStatus)
           console.log('errorThrown....',errorThrown)
           // Handle error response
-          $('#repoResultsTable').hide();
+          $('.tableSection').hide();
 
           // Close the loading state SweetAlert
           Swal.close();
