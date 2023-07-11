@@ -1,5 +1,6 @@
 body{
   background-color: #efefef;
+  font-family: 'Oxygen', sans-serif;
 }
 .container {
   max-width: 400px;
@@ -21,7 +22,12 @@ a:hover{
 }
 
 h1 {
-  text-align: center;
+  /* font-family: 'PT Sans Narrow', sans-serif; */
+  color: #362f4b;
+  text-align: left;
+  position: relative;
+  top: 3px;
+  right: -38px;
 }
 .wrapper{
   margin: 0 80px;
@@ -40,6 +46,7 @@ h1 {
   padding: 10px;
   border: none;
   outline: none;
+  z-index: 2;
 }
 .table-row:nth-child(even) {
   background: #f6f6f6;
@@ -54,6 +61,7 @@ h1 {
   color: #fff;
   border: none;
   cursor: pointer;
+  z-index: 2;
 }
 
 .search-button:hover {
@@ -70,7 +78,7 @@ img.coding-image {
   width: 300px;
   height: auto;
   z-index: 1;
-  left: 407px;
-  top: -175px;
+  left: 190px;
+  top: -145px;
   mix-blend-mode: multiply;
 }

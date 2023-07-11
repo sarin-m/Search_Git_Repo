@@ -1,5 +1,8 @@
 html.dark
   head
+    link(rel="preconnect" href="https://fonts.googleapis.com")
+    link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600&display=swap"  rel="stylesheet")
     link(rel="stylesheet" type="text/css" href="/stylesheets/style.css")
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js")
     link(rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css")
@@ -83,7 +86,7 @@ html.dark
           let str = '';
           for(let i = 0; i < result.length; i += 1) {
             // Build the table rows with result data
-            str += `<tr class='table-row'><td>${i}</td><td>${result[i].name}</td><td><a href=${result[i].url}>${result[i].url}</a></td><td>${result[i].description}</td><td>${result[i].language}</td></tr>`;
+            str += `<tr class='table-row'><td>${i}</td><td>${result[i].name}</td><td><a href=${result[i].html_url}>${result[i].html_url}</a></td><td>${result[i].description || 'Not Available'}</td><td>${result[i].language || 'Not Available'}</td></tr>`;
           }
           // Append the built rows to the repoResultsTable tbody
           $('#repoResultsTable tbody').append(str);
